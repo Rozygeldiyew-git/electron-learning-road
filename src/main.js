@@ -14,7 +14,7 @@ function createMainWindow() {
 
 
 
-app.whenReady().then(() => {
+app.on('ready', () => {
     createMainWindow()
 
 
@@ -22,7 +22,6 @@ app.whenReady().then(() => {
         if(BrowserWindow.getAllWindows().length === 0) createMainWindow()
     })
 })
-
 
 
 app.on('window-all-closed', () => {
