@@ -1,20 +1,33 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 
+
+
+
 function createMainWindow() {
+
+    const htmlPath = path.join(__dirname, 'windows/main/index.html')
+    const preloadScrtiptPath = path.join(__dirname, 'preload/mainPreload.js')
+    const iconPath = path.join(process.cwd(), 'assets/icons/r_logo.png')
     const mainWin = new BrowserWindow({
         width: 800,
-        height: 600
+        height: 600,
+        webPreferences: {
+            preload: preloadScrtiptPath
+        },
+        icon: iconPath
     })
 
-    mainWin.loadFile(path.join(__dirname, 'windows/main/index.html'))
+    ipcMain.handle('ping', () => 'pong')
+    // mainWin.webContents.openDevTools()
+    mainWin.loadFile(htmlPath)
 }
 
 
 
 
 
-app.on('ready', () => {
+app.whenReady().then(() => {
     createMainWindow()
 
 
@@ -22,6 +35,7 @@ app.on('ready', () => {
         if(BrowserWindow.getAllWindows().length === 0) createMainWindow()
     })
 })
+
 
 
 app.on('window-all-closed', () => {
